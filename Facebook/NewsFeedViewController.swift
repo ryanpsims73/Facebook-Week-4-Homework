@@ -100,6 +100,7 @@ class NewsFeedViewController: UIViewController, UIViewControllerTransitioningDel
         var fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
         
         let destinationImageCenter = CGPoint(x: 320/2, y: 284)
+        let destinationImageHeight = CGFloat(480)
         var originImageCenter = self.imageViewToSegue.center
         
         if (isPresenting) {
@@ -112,7 +113,19 @@ class NewsFeedViewController: UIViewController, UIViewControllerTransitioningDel
             copyImage.contentMode = UIViewContentMode.ScaleAspectFit
             copyImage.clipsToBounds = true
             
-            var scaleFactor = window.frame.width / copyImage.frame.width
+            var scaleFactor = CGFloat()
+            let scaleWidth = window.frame.width / copyImage.frame.width
+            let scaleHeight = destinationImageHeight / copyImage.frame.height
+            let minScale = min(scaleWidth, scaleHeight)
+            let maxScale = max(scaleWidth, scaleHeight)
+
+            if (copyImage.image!.size.height > copyImage.image!.size.width) {
+                scaleFactor = scaleHeight
+            } else {
+                scaleFactor = minScale
+            }
+            
+            println(scaleFactor)
             
             // add to parent window
             window.addSubview(copyImage)
@@ -120,7 +133,6 @@ class NewsFeedViewController: UIViewController, UIViewControllerTransitioningDel
             containerView.addSubview(toViewController.view)
             toViewController.view.alpha = 0
             UIView.animateWithDuration(0.4, animations: { () -> Void in
-                copyImage.clipsToBounds = false
                 copyImage.transform = CGAffineTransformMakeScale(scaleFactor, scaleFactor)
                 copyImage.center = destinationImageCenter
                 toViewController.view.alpha = 1
@@ -131,7 +143,9 @@ class NewsFeedViewController: UIViewController, UIViewControllerTransitioningDel
         } else {
             println("animating return transition")
             var photoViewController = fromViewController as PhotoViewController
-            //var feedViewController = toViewController as NewsFeedViewController
+            println(photoViewController.dynamicType.description())
+            println(toViewController.dynamicType.description())
+            //var feedViewController = tabBarController!.viewControllers[0] as NewsFeedViewController
             
             var window = UIApplication.sharedApplication().keyWindow
             var copyImage = UIImageView()

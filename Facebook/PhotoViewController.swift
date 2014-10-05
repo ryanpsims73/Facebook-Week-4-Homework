@@ -21,21 +21,34 @@ class PhotoViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // configure image
+        let imageOffsetY = photoImageView.frame.origin.y
         // Configure the content size of the scroll view
         scrollView.contentSize = photoImageView.image!.size
 
         // Do any additional setup after loading the view.
         photoImageView.image = selectedImage
+        photoImageView.frame.origin = CGPoint(x: 0, y: imageOffsetY)
+        //photoImageView.frame.size = selectedImage.size
         photoImageView.alpha = 0
         photoImageView.contentMode = UIViewContentMode.ScaleAspectFit
         photoImageView.clipsToBounds = true
         
         // pan the photo
-        var panPhoto = UIPanGestureRecognizer(target: self, action: "onPanPhoto:")
-        self.photoImageView.addGestureRecognizer(panPhoto)
+        //var panPhoto = UIPanGestureRecognizer(target: self, action: "onPanPhoto:")
+        //self.photoImageView.addGestureRecognizer(panPhoto)
         
-        // scroll the photo
+        // scroll setup
         scrollView.delegate = self
+        
+        let scrollViewFrame = scrollView.frame
+        let scaleWidth = scrollViewFrame.size.width / scrollView.contentSize.width
+        let scaleHeight = scrollViewFrame.size.height / scrollView.contentSize.height
+        let minScale = min(scaleWidth, scaleHeight)
+        scrollView.minimumZoomScale = minScale
+        
+        scrollView.maximumZoomScale = 1.0
+        scrollView.zoomScale = minScale
     }
     
     override func viewDidAppear(animated: Bool) {

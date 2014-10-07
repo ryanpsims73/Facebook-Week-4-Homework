@@ -143,27 +143,30 @@ class NewsFeedViewController: UIViewController, UIViewControllerTransitioningDel
         } else {
             println("animating return transition")
             var photoViewController = fromViewController as PhotoViewController
-            println(photoViewController.dynamicType.description())
-            println(toViewController.dynamicType.description())
-            //var feedViewController = tabBarController!.viewControllers[0] as NewsFeedViewController
+            var feedViewController = toViewController as? NewsFeedViewController
             
             var window = UIApplication.sharedApplication().keyWindow
             var copyImage = UIImageView()
             var scaleFactor =  self.imageViewToSegue.frame.width / photoViewController.photoImageView.frame.width
             
+            var photoViewScrollPositionY = photoViewController.scrollPosition
+            var photoFrame = photoViewController.photoImageView.frame
+            
             copyImage.image = photoViewController.photoImageView.image
             copyImage.contentMode = UIViewContentMode.ScaleAspectFit
             copyImage.clipsToBounds = true
-            copyImage.frame = window.convertRect(photoViewController.photoImageView.frame, toView: self.view)
+            copyImage.frame = photoViewController.photoImageView.frame
             
-            println(photoViewController.photoImageView.frame)
-            println(copyImage.frame)
+            
+            println(photoFrame.origin.y)
+            println(photoViewScrollPositionY)
+            println(copyImage.frame.origin.y)
             
             window.addSubview(copyImage)
             
             UIView.animateWithDuration(0.4, animations: { () -> Void in
                 copyImage.transform = CGAffineTransformMakeScale(scaleFactor, scaleFactor)
-                copyImage.center = originImageCenter;
+                copyImage.center = window.convertPoint(originImageCenter, fromView: self.scrollView)
                 fromViewController.view.alpha = 0
                 }) { (finished: Bool) -> Void in
                     transitionContext.completeTransition(true)

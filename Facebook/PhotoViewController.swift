@@ -108,19 +108,6 @@ class PhotoViewController: UIViewController, UIScrollViewDelegate {
             }
             self.imageZoomed = false
         }
-        
-//        
-//        // 3
-//        let scrollViewSize = scrollView.bounds.size
-//        let w = scrollViewSize.width / newZoomScale
-//        let h = scrollViewSize.height / newZoomScale
-//        let x = pointInView.x - (w / 2.0)
-//        let y = pointInView.y - (h / 2.0)
-//        
-//        let rectToZoomTo = CGRectMake(x, y, w, h);
-//        
-//        // 4
-//        scrollView.zoomToRect(rectToZoomTo, animated: true)
     }
     
     func onPanPhoto(gestureRecognizer: UIPanGestureRecognizer){
